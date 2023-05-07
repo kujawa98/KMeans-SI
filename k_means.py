@@ -1,28 +1,58 @@
+import math
+
 import numpy as np
 
 
 def initialize_centroids_forgy(data, k):
     # TODO implement random initialization
-    return None
+    return data[np.random.choice(len(data), k)]
 
 
 def initialize_centroids_kmeans_pp(data, k):
     # TODO implement kmeans++ initizalization
+    # first_random = data[np.random.choice(len(data), 1)]
+    # for _ in range(k - 1):
+    #     min_dist = math.inf
+    #     current_point = None
+    #     for point in data:
+    #         dist = np.sqrt(np.sum(np.power((centroid - point), 2)))
     return None
 
 
-def assign_to_cluster(data, centroid):
+def assign_to_cluster(data, centroids):
     # TODO find the closest cluster for each data point
-    return None
+    assignments = np.array([])
+    for point in data:
+        min_dist = math.inf
+        current_centroid = None
+        for centroid in centroids:
+            dist = np.sqrt(np.sum(np.power((centroid - point), 2)))
+            if dist < min_dist:
+                min_dist = dist
+                current_centroid = centroid
+        assignments = np.append(assignments, current_centroid)
+    assignments = assignments.reshape(data.shape)
+    return assignments
 
 
 def update_centroids(data, assignments):
     # TODO find new centroids based on the assignments
-    return None
+    centroids, frequency = np.unique(assignments, return_counts=True, axis=0)
+    new_centroids = np.array([])
+    for j, centroid in enumerate(centroids):
+        this_cent = np.array([])
+        for i, assignment in enumerate(assignments):
+            if np.array_equal(centroid, assignment):
+                this_cent = np.append(this_cent, data[i])
+        this_cent = this_cent.reshape((frequency[j], 4))
+        this_cent = np.sum(this_cent, axis=0)
+        this_cent /= frequency[j]
+        new_centroids = np.append(new_centroids, this_cent)
+    return new_centroids.reshape((3, 4))
 
 
-def mean_intra_distance(data, assignments, centroids):
-    return np.sqrt(np.sum((data - centroids[assignments, :]) ** 2))
+def mean_intra_distance(data, assignments):
+    return np.sqrt(np.sum(np.power((data - assignments), 2)))
 
 
 def k_means(data, num_centroids, kmeansplusplus=False):
@@ -34,7 +64,7 @@ def k_means(data, num_centroids, kmeansplusplus=False):
 
     assignments = assign_to_cluster(data, centroids)
     for i in range(100):  # max number of iteration = 100
-        print(f"Intra distance after {i} iterations: {mean_intra_distance(data, assignments, centroids)}")
+        print(f"Intra distance after {i} iterations: {mean_intra_distance(data, assignments)}")
         centroids = update_centroids(data, assignments)
         new_assignments = assign_to_cluster(data, centroids)
         if np.all(new_assignments == assignments):  # stop if nothing changed
@@ -42,4 +72,4 @@ def k_means(data, num_centroids, kmeansplusplus=False):
         else:
             assignments = new_assignments
 
-    return new_assignments, centroids, mean_intra_distance(data, new_assignments, centroids)
+    return new_assignments, centroids, mean_intra_distance(data, new_assignments)
