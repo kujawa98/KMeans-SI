@@ -12,7 +12,7 @@ def initialize_centroids_kmeans_pp(data, k):
     # TODO implement kmeans++ initizalization
     first_random = data[np.random.choice(len(data), 1)]
     centroids = np.array(first_random)
-    for _ in range(k - 1):  # chcę punkt którego min dist jest największy
+    for _ in range(k - 1):
         min_dists = np.array([])
         for point in data:
             min_dist = math.inf
