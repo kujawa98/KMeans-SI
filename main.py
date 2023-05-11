@@ -1,6 +1,7 @@
-from k_means import k_means
-import pandas as pd
 import numpy as np
+import pandas as pd
+
+from k_means import k_means
 
 
 def load_iris():
@@ -31,5 +32,5 @@ def clustering(kmeans_pp):
 
 
 if __name__ == "__main__":
-    clustering(kmeans_pp=False)
-    # clustering(kmeans_pp = False)
+    # clustering(kmeans_pp=False)
+    clustering(kmeans_pp=True)

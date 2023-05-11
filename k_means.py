@@ -10,13 +10,19 @@ def initialize_centroids_forgy(data, k):
 
 def initialize_centroids_kmeans_pp(data, k):
     # TODO implement kmeans++ initizalization
-    # first_random = data[np.random.choice(len(data), 1)]
-    # for _ in range(k - 1):
-    #     min_dist = math.inf
-    #     current_point = None
-    #     for point in data:
-    #         dist = np.sqrt(np.sum(np.power((centroid - point), 2)))
-    return None
+    first_random = data[np.random.choice(len(data), 1)]
+    centroids = np.array(first_random)
+    for _ in range(k - 1):  # chcę punkt którego min dist jest największy
+        min_dists = np.array([])
+        for point in data:
+            min_dist = math.inf
+            for centroid in centroids:
+                dist = np.sqrt(np.sum(np.power((centroid - point), 2)))
+                if dist < min_dist:
+                    min_dist = dist
+            min_dists = np.append(min_dists, min_dist)
+        centroids = np.append(centroids, data[np.argmax(min_dists)]).reshape((_ + 2, 4))
+    return centroids
 
 
 def assign_to_cluster(data, centroids):
