@@ -25,12 +25,16 @@ def clustering(kmeans_pp):
     features, classes = data
     intra_class_variance = []
     for i in range(100):
-        assignments, centroids, error = k_means(features, 3, kmeans_pp)
-        # evaluate(assignments, classes)
-        intra_class_variance.append(error)
+        try:
+            assignments, centroids, error = k_means(features, 3, kmeans_pp)
+            # evaluate(assignments, classes)
+            intra_class_variance.append(error)
+        except:
+            print("Centroids are too close to each other")
+            break
     print(f"Mean intra-class variance: {np.mean(intra_class_variance)}")
 
 
 if __name__ == "__main__":
-    # clustering(kmeans_pp=False)
+    clustering(kmeans_pp=False)
     clustering(kmeans_pp=True)
