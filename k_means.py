@@ -54,7 +54,8 @@ def update_centroids(data, assignments):
         this_cent = np.sum(this_cent, axis=0)
         this_cent /= frequency[j]
         new_centroids = np.append(new_centroids, this_cent)
-    return new_centroids.reshape((3, 4))
+    new_shape = (new_centroids.size // 4, 4)
+    return new_centroids.reshape(new_shape)
 
 
 def mean_intra_distance(data, assignments):
